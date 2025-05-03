@@ -41,10 +41,19 @@ st.title("🏥 OTC Knee Pain Recommender")
 
 # ─── PATIENT PROFILE ───────────────────────────────────────────────────────────
 st.header("Patient Profile")
-# Filter out any header-like entries
-gender_options = [g for g in df_full['gender'].unique() if str(g).strip().lower() != 'gender']
-race_options = [r for r in df_full['race'].unique() if str(r).strip().lower() != 'race']
-ethnicity_options = [e for e in df_full['ethnicity'].unique() if str(e).strip().lower() not in ('ethnicity','hispanic origin or ethnicity')]
+# Filter out non-feature entries: remove any "Selected Choice" and question headers
+gender_options = [
+    g for g in df_full['gender'].unique()
+    if isinstance(g, str) and 'Selected Choice' not in g and not g.startswith('Which')
+]
+race_options = [
+    r for r in df_full['race'].unique()
+    if isinstance(r, str) and 'Selected Choice' not in r and not r.startswith('Which')
+]
+ethnicity_options = [
+    e for e in df_full['ethnicity'].unique()
+    if isinstance(e, str) and 'Selected Choice' not in e and not e.startswith('Are you')
+]
 
 age       = st.text_input("Age", value="", placeholder="e.g. 45")
 gender    = st.selectbox("Gender", ["", *gender_options])
@@ -144,4 +153,4 @@ if st.button("Get OTC Recommendations"):
 
         st.subheader("Top 3 OTC Recommendations")
         for i in top3:
-            st.write(f"- **{classes[i]}**: {probs[i]:.1%} confidence")
+            st.write(f"- **{classes[i]}**")
