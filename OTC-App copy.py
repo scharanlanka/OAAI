@@ -8,7 +8,7 @@ from io import BytesIO
 MODEL_URL = "https://otc-only-model.s3.amazonaws.com/otc_classifier_no_postpain.pkl"
 #───────────────────────────────────────────────────────────────────────────────
 
-@st.cache(allow_output_mutation=True, show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def load_artifacts():
     # Load preprocessor (local)
     pre = joblib.load('otc_preprocessor_no_postpain.pkl')
